@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_home_work12/data/services/auth_service.dart';
+
 import 'package:flutter_home_work12/data/services/notes_service.dart';
 
 // class HabitsScreen extends StatelessWidget {
@@ -62,7 +62,7 @@ import 'package:flutter_home_work12/data/services/notes_service.dart';
 //
 //     showDialog(
 //       context: context,
-//       builder: (contex) => AlertDialog(
+//       builder: (context) => AlertDialog(
 //         title: const Text('Add Note'),
 //         content: TextField(
 //           controller: noteController,
@@ -70,13 +70,13 @@ import 'package:flutter_home_work12/data/services/notes_service.dart';
 //         ),
 //         actions: [
 //           TextButton(
-//             onPressed: () => Navigator.of(contex).pop(),
+//             onPressed: () => Navigator.of(context).pop(),
 //             child: const Text('Cancel'),
 //           ),
 //           TextButton(
 //             onPressed: () {
 //               NotesService().addNote(noteController.text);
-//               Navigator.of(contex).pop();
+//               Navigator.of(context).pop();
 //             },
 //             child: const Text('Add'),
 //           ),

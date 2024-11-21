@@ -18,6 +18,13 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _obscurePassword = true;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -50,6 +57,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
+                  autofocus: true,
                 ),
                 TextField(
                   controller: _passwordController,
@@ -65,8 +73,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscurePassword =
-                                    !_obscurePassword;
+                                _obscurePassword = !_obscurePassword;
                               });
                             },
                           )
@@ -81,8 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   onPressed: authStore.isLoading
                       ? null
                       : () async {
-                          FocusScope.of(context)
-                              .unfocus();
+                          FocusScope.of(context).unfocus();
                           final email = _emailController.text;
                           final password = _passwordController.text;
 

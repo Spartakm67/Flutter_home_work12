@@ -74,5 +74,4 @@ abstract class AuthStoreBase with Store {
       errorMessage = null;
     });
   }
-
 }
