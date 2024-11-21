@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:flutter_home_work12/data/services/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -47,6 +45,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 else {
                   await _authService.signUp(email, password);
                 }
+                Navigator.pushReplacementNamed(context, '/habits');
               },
               child: Text(_isLogin ? 'Login' : 'Sign Up'),
             ),
@@ -61,6 +60,33 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
     );
   }
+  // Future<void> _signIn() async {
+  //   try {
+  //     await _authService.signIn(
+  //       _emailController.text,
+  //       _passwordController.text,
+  //     );
+  //     Navigator.pushReplacementNamed(context, '/habits');
+  //   } catch (e) {
+  //     setState(() {
+  //       _errorMessage = e.toString();
+  //     });
+  //   }
+  // }
+  //
+  // Future<void> _register() async {
+  //   try {
+  //     await _authService.signUp(
+  //       _emailController.text,
+  //       _passwordController.text,
+  //     );
+  //     Navigator.pushReplacementNamed(context, '/habits');
+  //   } catch (e) {
+  //     setState(() {
+  //       _errorMessage = e.toString();
+  //     });
+  //   }
+  // }
 }
 
 // class AuthScreen extends StatefulWidget {
