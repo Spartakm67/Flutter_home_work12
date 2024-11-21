@@ -13,11 +13,11 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isLogin = true;
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Firebase Auth')),
@@ -42,11 +42,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 final password = _passwordController.text;
 
                 if (_isLogin) {
-                  await authService.signIn(email, password);
+                  await _authService.signIn(email, password);
                 }
-                // else {
-                //   await authService.signUp(email, password);
-                // }
+                else {
+                  await _authService.signUp(email, password);
+                }
               },
               child: Text(_isLogin ? 'Login' : 'Sign Up'),
             ),
@@ -54,7 +54,7 @@ class _AuthScreenState extends State<AuthScreen> {
               onPressed: () => setState(() => _isLogin = !_isLogin),
               child: Text(_isLogin
                   ? 'Create an account'
-                  : 'Already have an account? Log in'),
+                  : 'Already have an account? Log in',),
             ),
           ],
         ),
@@ -62,3 +62,84 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
+
+// class AuthScreen extends StatefulWidget {
+//   const AuthScreen({super.key});
+//
+//   @override
+//   State<AuthScreen> createState() => _AuthScreenState();
+// }
+//
+// class _AuthScreenState extends State<AuthScreen> {
+//   final _emailController = TextEditingController();
+//   final _passwordController = TextEditingController();
+//   final AuthService _authService = AuthService();
+//   String? _errorMessage;
+//
+//   Future<void> _signIn() async {
+//     try {
+//       await _authService.signIn(
+//         _emailController.text,
+//         _passwordController.text,
+//       );
+//       Navigator.pushReplacementNamed(context, '/habits');
+//     } catch (e) {
+//       setState(() {
+//         _errorMessage = e.toString();
+//       });
+//     }
+//   }
+//
+//   Future<void> _register() async {
+//     try {
+//       await _authService.signUp(
+//         _emailController.text,
+//         _passwordController.text,
+//       );
+//       Navigator.pushReplacementNamed(context, '/habits');
+//     } catch (e) {
+//       setState(() {
+//         _errorMessage = e.toString();
+//       });
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Sign In / Register')),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           children: [
+//             TextField(
+//               controller: _emailController,
+//               decoration: const InputDecoration(labelText: 'Email'),
+//             ),
+//             TextField(
+//               controller: _passwordController,
+//               decoration: const InputDecoration(labelText: 'Password'),
+//               obscureText: true,
+//             ),
+//             const SizedBox(height: 16),
+//             ElevatedButton(
+//               onPressed: _signIn,
+//               child: const Text('Sign In'),
+//             ),
+//             ElevatedButton(
+//               onPressed: _register,
+//               child: const Text('Register'),
+//             ),
+//             if (_errorMessage != null) ...[
+//               const SizedBox(height: 16),
+//               Text(
+//                 _errorMessage!,
+//                 style: const TextStyle(color: Colors.red),
+//               ),
+//             ],
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
