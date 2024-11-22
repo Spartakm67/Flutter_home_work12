@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_home_work12/domain/store/habit_store/habit_store.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_home_work12/presentation/screens/auth_screen.dart';
-import 'package:flutter_home_work12/presentation/screens/habits_screen.dart';
+import 'package:flutter_home_work12/presentation/screens/habit_list_screen.dart';
 import 'package:flutter_home_work12/domain/store/firebase_store/firebase_store.dart';
 
 void main() async {
@@ -11,9 +13,13 @@ void main() async {
   await dotenv.load();
   final firebaseStore = FirebaseStore();
   await firebaseStore.initialize();
+  final habitStore = HabitStore();
   runApp(
-    Provider<FirebaseStore>.value(
-      value: firebaseStore,
+    MultiProvider(
+      providers: [
+        Provider<FirebaseStore>.value(value: firebaseStore),
+        Provider<HabitStore>.value(value: habitStore),
+      ],
       child: const MyApp(),
     ),
   );
@@ -36,6 +42,7 @@ class MyApp extends StatelessWidget {
             ),
           );
         }
+        final habitStore = Provider.of<HabitStore>(context);
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter HW12',
@@ -55,7 +62,14 @@ class MyApp extends StatelessWidget {
               });
               return const AuthScreen();
             },
-            '/habits': (context) => const HabitsScreen(),
+            '/habits': (context) {
+              final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+              if (userId.isEmpty) {
+                return const AuthScreen();
+              }
+              habitStore.fetchHabits(userId);
+              return HabitListScreen(habitStore: habitStore, userId: userId);
+            },
           },
         );
       },

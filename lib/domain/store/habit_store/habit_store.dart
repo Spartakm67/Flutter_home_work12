@@ -27,9 +27,8 @@ abstract class HabitStoreBase with Store {
           .where('userId', isEqualTo: userId)
           .get();
 
-      final fetchedHabits = snapshot.docs
-          .map((doc) => Habit.fromFirestore(doc.data()))
-          .toList();
+      final fetchedHabits =
+          snapshot.docs.map((doc) => Habit.fromFirestore(doc.data())).toList();
 
       habits = ObservableList.of(fetchedHabits);
     } catch (e) {
@@ -42,7 +41,10 @@ abstract class HabitStoreBase with Store {
   @action
   Future<void> addHabit(Habit habit) async {
     try {
-      await _firestore.collection('habits').doc(habit.id).set(habit.toFirestore());
+      await _firestore
+          .collection('habits')
+          .doc(habit.id)
+          .set(habit.toFirestore());
       habits.add(habit);
     } catch (e) {
       errorMessage = 'Error adding habit: $e';
@@ -55,7 +57,10 @@ abstract class HabitStoreBase with Store {
       final habitIndex = habits.indexWhere((h) => h.id == habitId);
       if (habitIndex == -1) return;
 
-      habits[habitIndex].progress[date] = status;
+      final updatedHabit = habits[habitIndex];
+      updatedHabit.progress[date] = status;
+
+      habits = ObservableList.of(habits);
 
       await _firestore.collection('habits').doc(habitId).update({
         'progress.$date': status,
