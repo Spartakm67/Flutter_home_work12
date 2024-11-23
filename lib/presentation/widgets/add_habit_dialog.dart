@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_home_work12/domain/store/habit_store/habit_store.dart';
 import 'package:flutter_home_work12/services/capitalize_text_formatter.dart';
+import 'package:flutter_home_work12/services/date_piker_helper.dart';
 
 class AddHabitDialog extends StatefulWidget {
   final HabitStore habitStore;
@@ -41,7 +42,10 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
               inputFormatters: [CapitalizeTextFormatter()],
             ),
             GestureDetector(
-              onTap: () => _pickDate(context),
+            onTap: () async{
+              final datePickerHelper = DatePickerHelper();
+              await datePickerHelper.pickDate(context, startDateController);
+            },
               child: AbsorbPointer(
                 child: TextField(
                   controller: startDateController,
@@ -79,21 +83,6 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
         ),
       ],
     );
-  }
-
-  Future<void> _pickDate(BuildContext context) async {
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      setState(() {
-        startDateController.text = pickedDate.toIso8601String().split('T')[0];
-      });
-    }
   }
 
   @override

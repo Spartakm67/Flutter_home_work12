@@ -3,8 +3,8 @@ import 'package:flutter_home_work12/presentation/widgets/add_habit_dialog.dart';
 import 'package:flutter_home_work12/presentation/widgets/add_edit_dialog.dart';
 import 'package:flutter_home_work12/presentation/widgets/delete_dialog.dart';
 import 'package:flutter_home_work12/presentation/widgets/custom_app_bar.dart';
+import 'package:flutter_home_work12/services/habit_progress_color_calculator.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_home_work12/domain/store/habit_store/habit_store.dart';
@@ -52,7 +52,10 @@ class _HabitListScreenState extends State<HabitListScreen> {
         title: 'Ваші звички',
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.white,),
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
             onPressed: () => showDialog(
               context: context,
               builder: (context) => AddHabitDialog(
@@ -62,7 +65,10 @@ class _HabitListScreenState extends State<HabitListScreen> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white,),
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
             onPressed: () async {
               final navigator = Navigator.of(context);
               await authStore.signOut();
@@ -77,13 +83,13 @@ class _HabitListScreenState extends State<HabitListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (widget.habitStore.habits.isEmpty) {
-            return Center(
+            return const Center(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(20.0),
                 child: Text(
                   'Вітаємо! Ще немає записів, натисніть "+" щоб додати першу звичку',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                  style: TextStyles.greetingsText,
                 ),
               ),
             );
@@ -189,8 +195,10 @@ class _HabitListScreenState extends State<HabitListScreen> {
                                   ),
                                 );
                               },
-                              icon: const Icon(Icons.delete,
-                                  color: Colors.deepOrangeAccent,),
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.deepOrangeAccent,
+                              ),
                             ),
                           ],
                         ),
@@ -204,7 +212,8 @@ class _HabitListScreenState extends State<HabitListScreen> {
                                       ? 1
                                       : habit.progress.length),
                           lineHeight: 8.0,
-                          progressColor: _calculateProgressColor(habit),
+                          progressColor: HabitProgressColorCalculator()
+                              .calculateProgressColor(habit),
                         ),
                       ),
                     ],
@@ -237,21 +246,5 @@ class _HabitListScreenState extends State<HabitListScreen> {
         },
       ),
     );
-  }
-
-  Color _calculateProgressColor(Habit habit) {
-    final totalDays = habit.progress.length;
-    if (totalDays == 0) return Colors.red;
-
-    final completedDays = habit.progress.values.where((v) => v).length;
-    final progressPercent = completedDays / totalDays;
-
-    if (progressPercent >= 0.75) {
-      return Colors.green;
-    } else if (progressPercent >= 0.5) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
   }
 }
