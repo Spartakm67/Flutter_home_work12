@@ -37,10 +37,16 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
               controller: frequencyController,
               decoration: const InputDecoration(labelText: 'Частота виконання'),
             ),
-            TextField(
-              controller: startDateController,
-              decoration: const InputDecoration(
-                labelText: 'Дата початку (YYYY-MM-DD)',
+            GestureDetector(
+              onTap: () => _pickDate(context),
+              child: AbsorbPointer(
+                child: TextField(
+                  controller: startDateController,
+                  decoration: const InputDecoration(
+                    labelText: 'Дата початку (YYYY-MM-DD)',
+                    suffixIcon: Icon(Icons.calendar_today),
+                  ),
+                ),
               ),
             ),
           ],
@@ -70,6 +76,21 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
         ),
       ],
     );
+  }
+
+  Future<void> _pickDate(BuildContext context) async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        startDateController.text = pickedDate.toIso8601String().split('T')[0];
+      });
+    }
   }
 
   @override

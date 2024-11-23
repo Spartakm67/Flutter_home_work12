@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_home_work12/presentation/widgets/add_habit_dialog.dart';
-import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_home_work12/domain/store/habit_store/habit_store.dart';
 import 'package:flutter_home_work12/domain/store/auth_store/auth_store.dart';
-
 
 class HabitListScreen extends StatelessWidget {
   final HabitStore habitStore;
@@ -50,11 +48,11 @@ class HabitListScreen extends StatelessWidget {
           if (habitStore.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: MasonryGridView.builder(
-              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              gridDelegate:
+                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
               ),
               mainAxisSpacing: 8.0,
@@ -105,67 +103,6 @@ class HabitListScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  void _showAddHabitDialog(
-      BuildContext context, HabitStore habitStore, String userId,) {
-    final nameController = TextEditingController();
-    final frequencyController = TextEditingController();
-    final startDateController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Додати нову звичку'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Назва звички'),
-                ),
-                TextField(
-                  controller: frequencyController,
-                  decoration:
-                  const InputDecoration(labelText: 'Частота виконання'),
-                ),
-                TextField(
-                  controller: startDateController,
-                  decoration: const InputDecoration(
-                    labelText: 'Дата початку (YYYY-MM-DD)',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Скасувати'),
-            ),
-            TextButton(
-              onPressed: () {
-                final newHabit = Habit(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  name: nameController.text,
-                  frequency: frequencyController.text,
-                  startDate: startDateController.text,
-                  progress: {},
-                  userId: userId,
-                );
-                habitStore.addHabit(newHabit);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Додати'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
