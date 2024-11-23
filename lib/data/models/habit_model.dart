@@ -36,4 +36,22 @@ class Habit {
       'userId': userId,
     };
   }
+
+  Habit copyWith({
+    String? id,
+    String? name,
+    String? frequency,
+    String? startDate,
+    Map<String, bool>? progress,
+    String? userId,
+  }) {
+    return Habit(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      frequency: frequency ?? this.frequency,
+      startDate: startDate ?? this.startDate,
+      progress: progress ?? this.progress,
+      userId: userId ?? this.userId,
+    );
+  }
 }

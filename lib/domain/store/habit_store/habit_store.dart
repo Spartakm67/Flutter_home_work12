@@ -69,4 +69,33 @@ abstract class HabitStoreBase with Store {
       errorMessage = 'Error updating progress: $e';
     }
   }
+
+  @action
+  Future<void> updateHabit(Habit updatedHabit) async {
+    try {
+      await _firestore
+          .collection('habits')
+          .doc(updatedHabit.id)
+          .update(updatedHabit.toFirestore());
+
+      final index = habits.indexWhere((h) => h.id == updatedHabit.id);
+      if (index != -1) {
+        habits[index] = updatedHabit;
+        habits = ObservableList.of(habits);
+      }
+    } catch (e) {
+      errorMessage = 'Error updating habit: $e';
+    }
+  }
+
+  @action
+  Future<void> deleteHabit(String habitId) async {
+    try {
+      await _firestore.collection('habits').doc(habitId).delete();
+      habits.removeWhere((habit) => habit.id == habitId);
+    } catch (e) {
+      errorMessage = 'Error deleting habit: $e';
+    }
+  }
+
 }

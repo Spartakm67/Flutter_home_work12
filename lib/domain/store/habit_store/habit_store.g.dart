@@ -82,6 +82,22 @@ mixin _$HabitStore on HabitStoreBase, Store {
         .run(() => super.updateProgress(habitId, date, status));
   }
 
+  late final _$updateHabitAsyncAction =
+      AsyncAction('HabitStoreBase.updateHabit', context: context);
+
+  @override
+  Future<void> updateHabit(Habit updatedHabit) {
+    return _$updateHabitAsyncAction.run(() => super.updateHabit(updatedHabit));
+  }
+
+  late final _$deleteHabitAsyncAction =
+      AsyncAction('HabitStoreBase.deleteHabit', context: context);
+
+  @override
+  Future<void> deleteHabit(String habitId) {
+    return _$deleteHabitAsyncAction.run(() => super.deleteHabit(habitId));
+  }
+
   @override
   String toString() {
     return '''

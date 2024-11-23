@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_home_work12/presentation/widgets/add_habit_dialog.dart';
+import 'package:flutter_home_work12/presentation/widgets/add_edit_dialog.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -143,7 +144,15 @@ class _HabitListScreenState extends State<HabitListScreen> {
                             const Spacer(),
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AddEditDialog(
+                                    habitStore: widget.habitStore,
+                                    habit: habit,
+                                  ),
+                                );
+                              },
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
