@@ -5,8 +5,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_home_work12/domain/store/habit_store/habit_store.dart';
 import 'package:flutter_home_work12/domain/store/auth_store/auth_store.dart';
+import 'package:flutter_home_work12/domain/store/scroll_store/scroll_store.dart';
 
-class HabitListScreen extends StatelessWidget {
+class HabitListScreen extends StatefulWidget {
   final HabitStore habitStore;
   final String userId;
 
@@ -15,6 +16,28 @@ class HabitListScreen extends StatelessWidget {
     required this.habitStore,
     required this.userId,
   });
+
+  @override
+  State<HabitListScreen> createState() => _HabitListScreenState();
+}
+
+class _HabitListScreenState extends State<HabitListScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final ScrollStore scrollStore = ScrollStore();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      scrollStore.updateScrollPosition(_scrollController.offset);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +51,8 @@ class HabitListScreen extends StatelessWidget {
             onPressed: () => showDialog(
               context: context,
               builder: (context) => AddHabitDialog(
-                habitStore: habitStore,
-                userId: userId,
+                habitStore: widget.habitStore,
+                userId: widget.userId,
               ),
             ),
           ),
@@ -45,21 +68,34 @@ class HabitListScreen extends StatelessWidget {
       ),
       body: Observer(
         builder: (_) {
-          if (habitStore.isLoading) {
+          if (widget.habitStore.isLoading) {
             return const Center(child: CircularProgressIndicator());
+          }
+          if (widget.habitStore.habits.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'Вітаємо! Ще немає записів, натисніть "+" щоб додати першу звичку',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                ),
+              ),
+            );
           }
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: MasonryGridView.builder(
+              controller: _scrollController,
               gridDelegate:
                   const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
               ),
               mainAxisSpacing: 8.0,
               crossAxisSpacing: 8.0,
-              itemCount: habitStore.habits.length,
+              itemCount: widget.habitStore.habits.length,
               itemBuilder: (context, index) {
-                final habit = habitStore.habits[index];
+                final habit = widget.habitStore.habits[index];
                 final today = DateTime.now().toIso8601String().split('T')[0];
                 final isDone = habit.progress[today] ?? false;
 
@@ -79,7 +115,7 @@ class HabitListScreen extends StatelessWidget {
                         trailing: Checkbox(
                           value: isDone,
                           onChanged: (value) {
-                            habitStore.updateProgress(
+                            widget.habitStore.updateProgress(
                               habit.id,
                               today,
                               value ?? false,
@@ -101,6 +137,27 @@ class HabitListScreen extends StatelessWidget {
               },
             ),
           );
+        },
+      ),
+      floatingActionButton: Observer(
+        builder: (_) {
+          return scrollStore.showScrollToTopButton
+              ? FloatingActionButton(
+                  shape: const CircleBorder(),
+                  backgroundColor: Colors.blue,
+                  onPressed: () {
+                    _scrollController.animateTo(
+                      0.0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeOut,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.keyboard_arrow_up_rounded,
+                    color: Colors.white,
+                  ),
+                )
+              : const SizedBox.shrink();
         },
       ),
     );
