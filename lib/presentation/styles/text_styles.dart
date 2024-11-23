@@ -11,7 +11,7 @@ class TextStyles {
 
   static const TextStyle spanKeyText = TextStyle(
     fontWeight: FontWeight.bold,
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.black,
   );
 
@@ -35,8 +35,8 @@ class TextStyles {
 
   static const TextStyle spanTitleText = TextStyle(
     fontWeight: FontWeight.normal,
-    fontSize: 14,
-    color: Colors.blue,
+    fontSize: 16,
+    color: Colors.indigo,
   );
 
   static const TextStyle spanEmailText = TextStyle(

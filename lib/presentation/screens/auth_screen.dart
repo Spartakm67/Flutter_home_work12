@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_home_work12/domain/store/auth_store/auth_store.dart';
+import 'package:flutter_home_work12/presentation/widgets/custom_app_bar.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -27,12 +28,12 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Firebase Auth'),
+      appBar: CustomAppBar(
+        title: 'Habits App',
         actions: [
           if (_showSignOut)
             IconButton(
-              icon: const Icon(Icons.logout),
+              icon: const Icon(Icons.logout, color: Colors.white,),
               onPressed: authStore.isLoading
                   ? null
                   : () async {
@@ -54,6 +55,7 @@ class _AuthScreenState extends State<AuthScreen> {
             builder: (_) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 60,),
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),

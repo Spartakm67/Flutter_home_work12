@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_home_work12/presentation/widgets/add_habit_dialog.dart';
 import 'package:flutter_home_work12/presentation/widgets/add_edit_dialog.dart';
 import 'package:flutter_home_work12/presentation/widgets/delete_dialog.dart';
+import 'package:flutter_home_work12/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -47,11 +48,11 @@ class _HabitListScreenState extends State<HabitListScreen> {
   Widget build(BuildContext context) {
     final AuthStore authStore = AuthStore();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ваші звички'),
+      appBar: CustomAppBar(
+        title: 'Ваші звички',
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add, color: Colors.white,),
             onPressed: () => showDialog(
               context: context,
               builder: (context) => AddHabitDialog(
@@ -61,7 +62,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white,),
             onPressed: () async {
               final navigator = Navigator.of(context);
               await authStore.signOut();
@@ -119,12 +120,35 @@ class _HabitListScreenState extends State<HabitListScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Частота: \n${habit.frequency}',
-                              softWrap: true,
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Частота: ',
+                                    style: TextStyles.spanKeyText,
+                                  ),
+                                  TextSpan(
+                                    text: ' \n${habit.frequency}',
+                                    style: TextStyles.spanTitleText,
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 4.0),
-                            Text('Старт: ${habit.startDate}'),
+                            const SizedBox(height: 8.0),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Старт:  ',
+                                    style: TextStyles.spanKeyText,
+                                  ),
+                                  TextSpan(
+                                    text: habit.startDate,
+                                    style: TextStyles.spanTitleText,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -156,7 +180,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
                               },
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.deepOrangeAccent),
                               onPressed: () {
                                 showDialog(
                                   context: context,
@@ -166,6 +189,8 @@ class _HabitListScreenState extends State<HabitListScreen> {
                                   ),
                                 );
                               },
+                              icon: const Icon(Icons.delete,
+                                  color: Colors.deepOrangeAccent,),
                             ),
                           ],
                         ),
