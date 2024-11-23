@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_home_work12/presentation/widgets/add_habit_dialog.dart';
 import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -20,18 +20,28 @@ class HabitListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthStore authStore = AuthStore();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ваші звички'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => _showAddHabitDialog(context, habitStore, userId),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AddHabitDialog(
+                habitStore: habitStore,
+                userId: userId,
+              ),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () =>
-                Provider.of<AuthStore>(context, listen: false).signOut(),
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+              await authStore.signOut();
+              navigator.pushReplacementNamed('/auth');
+            },
           ),
         ],
       ),
@@ -60,7 +70,14 @@ class HabitListScreen extends StatelessWidget {
                     children: [
                       ListTile(
                         title: Text(habit.name),
-                        subtitle: Text('Частота: ${habit.frequency}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Частота: ${habit.frequency}'),
+                            const SizedBox(height: 4.0),
+                            Text('Старт: ${habit.startDate}'),
+                          ],
+                        ),
                         trailing: Checkbox(
                           value: isDone,
                           onChanged: (value) {
