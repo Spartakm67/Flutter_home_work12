@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_home_work12/data/models/habit_model.dart';
 import 'package:flutter_home_work12/domain/store/habit_store/habit_store.dart';
+import 'package:flutter_home_work12/services/capitalize_text_formatter.dart';
 
 class AddHabitDialog extends StatefulWidget {
   final HabitStore habitStore;
@@ -32,10 +33,12 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
             TextField(
               controller: nameController,
               decoration: const InputDecoration(labelText: 'Назва звички'),
+              inputFormatters: [CapitalizeTextFormatter()],
             ),
             TextField(
               controller: frequencyController,
               decoration: const InputDecoration(labelText: 'Частота виконання'),
+              inputFormatters: [CapitalizeTextFormatter()],
             ),
             GestureDetector(
               onTap: () => _pickDate(context),
