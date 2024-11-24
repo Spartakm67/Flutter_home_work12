@@ -42,10 +42,10 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
               inputFormatters: [CapitalizeTextFormatter()],
             ),
             GestureDetector(
-            onTap: () async{
-              final datePickerHelper = DatePickerHelper();
-              await datePickerHelper.pickDate(context, startDateController);
-            },
+              onTap: () async {
+                final datePickerHelper = DatePickerHelper();
+                await datePickerHelper.pickDate(context, startDateController);
+              },
               child: AbsorbPointer(
                 child: TextField(
                   controller: startDateController,
@@ -68,16 +68,27 @@ class _AddHabitDialogState extends State<AddHabitDialog> {
         ),
         TextButton(
           onPressed: () {
-            final newHabit = Habit(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              name: nameController.text,
-              frequency: frequencyController.text,
-              startDate: startDateController.text,
-              progress: {},
-              userId: widget.userId,
-            );
-            widget.habitStore.addHabit(newHabit);
-            Navigator.of(context).pop();
+            if (nameController.text.isEmpty ||
+                frequencyController.text.isEmpty ||
+                startDateController.text.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Будь ласка, заповніть усі поля.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            } else {
+              final newHabit = Habit(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: nameController.text,
+                frequency: frequencyController.text,
+                startDate: startDateController.text,
+                progress: {},
+                userId: widget.userId,
+              );
+              widget.habitStore.addHabit(newHabit);
+              Navigator.of(context).pop();
+            }
           },
           child: const Text('Додати'),
         ),
